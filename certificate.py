@@ -8,6 +8,8 @@ import jdatetime
 import io
 from PIL import Image
 
+from create_binary_of_image import binary_generator
+
 def reshape_text(text):
     return get_display(arabic_reshaper.reshape(text))
 
@@ -41,21 +43,23 @@ def create_medical_certificate(first_name, last_name, sick_days, signature_data)
     last_name_text = reshape_text(f"نام خانوادگی: {last_name}")
     date_text = reshape_text(f"تاریخ: {jdatetime.date.today().strftime('%Y/%m/%d')}")
     sick_days_text = reshape_text(f"تعداد روزهای استعلاجی: {sick_days}")
-    doctor_text = reshape_text("نام پزشک: دکتر احمدی")
+    doctor_text = reshape_text("نام پزشک: دکتر شبانی شهرضا")
     stamp_text = reshape_text("مهر:")
-    additional_info = reshape_text("این گواهی جهت تایید مرخصی استعلاجی صادر شده است.")
-    
+    additional_info = reshape_text("این گواهی جهت تایید استعلاجی نام برده صادر شده و تا 24 ساعت از صدور اعتبار دارد.")
+    certificate = reshape_text('ویزیت آنلاین مدوگرام')
+    link = reshape_text('medogram.ir')
     # چاپ از راست به چپ
     text_objects = [
         first_name_text, last_name_text, date_text,
         sick_days_text, additional_info,
-        doctor_text, stamp_text
+        doctor_text, stamp_text, certificate ,
+          link
     ]
     
     y_positions = [
         height - margin - 70, height - margin - 100, height - margin - 130,
         height - margin - 160, height - margin - 200,
-        height - margin - 240, height - margin - 270
+        height - margin - 240, height - margin - 270, height - margin - 300 , height - margin - 330,
     ]
     
     for text, y in zip(text_objects, y_positions):
@@ -64,7 +68,7 @@ def create_medical_certificate(first_name, last_name, sick_days, signature_data)
     
     # اضافه کردن امضا
     with Image.open(io.BytesIO(signature_data)) as img:
-        temp_path = "temp_signature.jpg"
+        temp_path = "temp_signature.png"
         img.save(temp_path)
         # محاسبه موقعیت برای قرار دادن امضا در وسط
         signature_width = 150
@@ -78,7 +82,7 @@ def create_medical_certificate(first_name, last_name, sick_days, signature_data)
     print(f"فایل {file_name} با موفقیت ایجاد شد.")
 
 # داده باینری تصویر امضا
-signature_data = b'\xff\xd8\xff...'  # داده باینری تصویر امضا را اینجا قرار دهید
+signature_data = binary_generator()  # داده باینری تصویر امضا را اینجا قرار دهید
 
 # مثال استفاده
 create_medical_certificate("علی", "رضایی", 3, signature_data)
