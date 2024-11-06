@@ -13,7 +13,7 @@ from create_binary_of_image import binary_generator
 def reshape_text(text):
     return get_display(arabic_reshaper.reshape(text))
 
-def create_medical_certificate(first_name, last_name, sick_days, signature_data):
+def create_medical_certificate(first_name, last_name, sick_days, sick_name, signature_data):
     # ثبت فونت فارسی
     pdfmetrics.registerFont(TTFont('IRANSans', 'IRANSans.ttf'))
     
@@ -43,6 +43,7 @@ def create_medical_certificate(first_name, last_name, sick_days, signature_data)
     last_name_text = reshape_text(f"نام خانوادگی: {last_name}")
     date_text = reshape_text(f"تاریخ: {jdatetime.date.today().strftime('%Y/%m/%d')}")
     sick_days_text = reshape_text(f"تعداد روزهای استعلاجی: {sick_days}")
+    sick = reshape_text(f' نام بیماری:{sick_name}')
     doctor_text = reshape_text("نام پزشک: دکتر شبانی شهرضا")
     stamp_text = reshape_text("مهر:")
     additional_info = reshape_text("این گواهی جهت تایید استعلاجی نام برده صادر شده و تا 24 ساعت از صدور اعتبار دارد.")
@@ -51,7 +52,7 @@ def create_medical_certificate(first_name, last_name, sick_days, signature_data)
     # چاپ از راست به چپ
     text_objects = [
         first_name_text, last_name_text, date_text,
-        sick_days_text, additional_info,
+        sick, sick_days_text, additional_info,
         doctor_text, stamp_text, certificate ,
           link
     ]
@@ -85,4 +86,4 @@ def create_medical_certificate(first_name, last_name, sick_days, signature_data)
 signature_data = binary_generator()  # داده باینری تصویر امضا را اینجا قرار دهید
 
 # مثال استفاده
-create_medical_certificate("علی", "رضایی", 3, signature_data)
+create_medical_certificate("علی", "رضایی", 3, 'سرما خوردگی', signature_data)
