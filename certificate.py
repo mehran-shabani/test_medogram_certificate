@@ -13,7 +13,7 @@ from create_binary_of_image import binary_generator
 def reshape_text(text):
     return get_display(arabic_reshaper.reshape(text))
 
-def create_medical_certificate(first_name, last_name, sick_days, sick_name, signature_data):
+def create_medical_certificate(first_name, last_name, sick_days, sick_name,):
     # ثبت فونت فارسی
     pdfmetrics.registerFont(TTFont('IRANSans', 'IRANSans.ttf'))
     
@@ -67,23 +67,20 @@ def create_medical_certificate(first_name, last_name, sick_days, sick_name, sign
         text_width = c.stringWidth(text, 'IRANSans', 16)
         c.drawString(width - text_width - margin - 10, y, text)
     
-    # اضافه کردن امضا
+    signature_data = binary_generator()
+
     with Image.open(io.BytesIO(signature_data)) as img:
         temp_path = "temp_signature.png"
         img.save(temp_path)
-        # محاسبه موقعیت برای قرار دادن امضا در وسط
         signature_width = 150
         signature_height = 50
         signature_x = (width - signature_width) / 2
-        signature_y = height - margin - 350  # تنظیم ارتفاع برای بالاتر بردن امضا
+        signature_y = height - margin - 350  
         c.drawImage(temp_path, signature_x, signature_y, width=signature_width, height=signature_height)
 
-    # پایان و ذخیره فایل
+    
     c.save()
     print(f"فایل {file_name} با موفقیت ایجاد شد.")
 
-# داده باینری تصویر امضا
-signature_data = binary_generator()  # داده باینری تصویر امضا را اینجا قرار دهید
 
-# مثال استفاده
-create_medical_certificate("علی", "رضایی", 3, 'سرما خوردگی', signature_data)
+create_medical_certificate("علی", "رضایی", 3, 'سرما خوردگی')
